@@ -21,7 +21,7 @@ Die App soll für Mitarbeiter sein die mit diesen Geräten die Medizinprodukte a
 > - Kategorie von Alle bis zu jedem einzelnen Bereich
 > - Favoriten speichern und löschen
 > - Anlegen der Daten vom Namen und der Praxis wo man arbeitet
-> - 
+> - Detailscreen mit Bild, Beschreibung und eine Anleitung wie man das Gerät bedient
 
 ##  📱 Wie sehen die Screens aus:
 
