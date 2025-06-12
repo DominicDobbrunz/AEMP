@@ -17,10 +17,10 @@ Die App soll für Mitarbeiter sein die mit diesen Geräten die Medizinprodukte a
 
 ## 👨🏻‍💻 Welche Funktionen bringt die App mit: 
 
-> - 
-> - 
-> - 
-> - 
+> - eine suche für die Geräte
+> - Kategorie von Alle bis zu jedem einzelnen Bereich
+> - Favoriten speichern und löschen
+> - Anlegen der Daten vom Namen und der Praxis wo man arbeitet
 > - 
 
 ##  📱 Wie sehen die Screens aus:
@@ -36,6 +36,8 @@ Die App soll für Mitarbeiter sein die mit diesen Geräten die Medizinprodukte a
 3. App im Studio über den Simulator starten.
 
 ## 🛠️ Technologie-Stack:
+
+## 👋 Weitere Aussichten:
 
 ## ✍🏻 Autor/Programmierer:
 
