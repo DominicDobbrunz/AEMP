@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax.aemp.ui.theme.AEMPTheme
 import de.syntax.aemp.ui.theme.composable.AppLauncher
 import de.syntax.aemp.ui.theme.composable.Launch
-import de.syntax.aemp.ui.theme.composable.RootApp
+import de.syntax.aemp.di.RootApp
 import de.syntax.aemp.ui.theme.viewModel.UserViewModel
 import kotlin.time.Duration.Companion.seconds
 
@@ -18,14 +18,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AEMPTheme {
-                AppLauncher(
-                    duration = 3.seconds,
-                    launchContent = { Launch() }
-                ) {
-                    val userViewModel: UserViewModel = viewModel()
-                    RootApp(userViewModel)
-                }
+                    AppLauncher(
+                        duration = 3.seconds,
+                        launchContent = { Launch() }
+                    ) {
+                        val userViewModel: UserViewModel = viewModel()
+                        RootApp(userViewModel)
+                    }
             }
         }
     }
 }
+

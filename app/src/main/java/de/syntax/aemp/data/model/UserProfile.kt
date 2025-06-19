@@ -1,4 +1,4 @@
-package de.syntax.aemp
+package de.syntax.aemp.data.model
 
 data class UserProfile(
     val uid: String = "",
