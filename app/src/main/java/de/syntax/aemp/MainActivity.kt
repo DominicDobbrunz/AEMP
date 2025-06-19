@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax.aemp.ui.theme.AEMPTheme
+import de.syntax.aemp.ui.theme.composable.AppLauncher
+import de.syntax.aemp.ui.theme.composable.Launch
+import de.syntax.aemp.ui.theme.composable.RootApp
+import de.syntax.aemp.ui.theme.viewModel.UserViewModel
+import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +18,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AEMPTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "AEMP",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                AppLauncher(
+                    duration = 3.seconds,
+                    launchContent = { Launch() }
+                ) {
+                    val userViewModel: UserViewModel = viewModel()
+                    RootApp(userViewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AEMPTheme {
-        Greeting("Android")
     }
 }
