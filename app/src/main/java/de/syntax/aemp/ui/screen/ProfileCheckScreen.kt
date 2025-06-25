@@ -1,4 +1,4 @@
-package de.syntax.aemp.ui.theme.screen
+package de.syntax.aemp.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import de.syntax.aemp.FirebaseRepository
+import de.syntax.aemp.data.repository.FirebaseRepository
 
 @Composable
 fun ProfileCheckScreen(

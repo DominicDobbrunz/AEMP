@@ -12,7 +12,6 @@ object FirebaseRepository {
     fun saveUserProfile(profile: UserProfile) {
         db.collection("users").document(profile.uid).set(profile)
     }
-
     fun getUserProfile(onResult: (UserProfile?) -> Unit) {
         val uid = auth.currentUser?.uid ?: return onResult(null)
         db.collection("users").document(uid).get()

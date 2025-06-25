@@ -1,4 +1,4 @@
-package de.syntax.aemp.ui.theme.viewModel
+package de.syntax.aemp.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -25,26 +25,21 @@ class UserViewModel : ViewModel() {
             .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }
-
     fun registerWithEmail(email: String, password: String, onResult: (Boolean) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }
-
     fun loginWithGoogle() {
-        // TODO: Google Login via ActivityResultLauncher integrieren
+        // TODO: Google Login
     }
-
     fun logout() {
         auth.signOut()
     }
-
     fun saveUserProfile(profile: UserProfile, onSuccess: () -> Unit) {
         db.collection("users").document(profile.uid).set(profile)
             .addOnSuccessListener { onSuccess() }
     }
-
     fun getUserProfile(onResult: (UserProfile?) -> Unit) {
         val uid = auth.currentUser?.uid ?: return onResult(null)
         db.collection("users").document(uid).get()

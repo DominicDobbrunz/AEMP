@@ -1,6 +1,7 @@
-package de.syntax.aemp.ui.theme.composable
+package de.syntax.aemp.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,18 +14,17 @@ import de.syntax.aemp.R
 @Composable
 fun BackgroundImage() {
     Image(
-        painter = painterResource(id = R.drawable.medi1),
-        contentDescription = "Hintergrund",
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.7f),
-        contentScale = ContentScale.Crop
-
-    )
+            painter = painterResource(id = R.drawable.medi2),
+            contentDescription = "Hintergrund",
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.9f),
+            contentScale = ContentScale.Crop
+        )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun BackGroundPreviw() {
+fun BackGroundPreview() {
     BackgroundImage()
 }

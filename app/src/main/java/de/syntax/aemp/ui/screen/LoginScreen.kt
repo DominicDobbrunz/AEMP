@@ -1,7 +1,6 @@
-package de.syntax.aemp.ui.theme.screen
+package de.syntax.aemp.ui.screen
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,10 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import de.syntax.aemp.ui.theme.composable.BackgroundImage
-import de.syntax.aemp.ui.theme.composable.ProfileTextField
+import de.syntax.aemp.ui.component.BackgroundImage
+import de.syntax.aemp.ui.component.PasswordField
+import de.syntax.aemp.ui.component.ProfileTextField
 
 @Composable
 fun LoginScreen(
@@ -48,7 +44,6 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-
     ) {
         BackgroundImage()
         Column(
@@ -63,20 +58,11 @@ fun LoginScreen(
                 color = Color.White,
                 style = MaterialTheme.typography.displayLarge
             )
+            Spacer(Modifier.height(16.dp))
+            ProfileTextField( value = email, label = "E-Mail") { email = it.trim() }
+            PasswordField( password = password, onPasswordChange = {password = it}, modifier = Modifier)
 
             Spacer(Modifier.height(16.dp))
-
-            ProfileTextField(value = email, label = "E-Mail") { email = it.trim() }
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Passwort") },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation()
-            )
-
-            Spacer(Modifier.height(16.dp))
-
             Button(
                 onClick = {
                     if (email.isBlank() || password.isBlank()) {
@@ -88,26 +74,20 @@ fun LoginScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Mit E-Mail anmelden")
+                Text("Login")
             }
-
             Spacer(Modifier.height(16.dp))
-
             Button(
                 onClick = onLoginWithGoogle,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(),
-                border = BorderStroke(1.dp, Color.Gray)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.AccountCircle, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
                 Text("Mit Google anmelden")
             }
-
             Spacer(Modifier.height(8.dp))
-
             TextButton(onClick = onNavigateToRegister) {
-                Text("Kein Konto? Jetzt registrieren")
+                Text("Kein Konto? Jetzt registrieren", color = Color.White)
             }
         }
     }

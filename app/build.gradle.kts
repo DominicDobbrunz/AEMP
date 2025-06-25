@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -83,6 +84,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.messaging.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -96,4 +99,5 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose.v277)
     implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.androidx.compose.material3.material3)
 }

@@ -1,4 +1,4 @@
-package de.syntax.aemp.ui.theme.composable
+package de.syntax.aemp.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
