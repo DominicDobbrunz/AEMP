@@ -26,8 +26,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.syntax.aemp.data.model.UserProfile
 import de.syntax.aemp.data.repository.FirebaseRepository
-import de.syntax.aemp.ui.component.PasswordField
-import de.syntax.aemp.ui.component.ProfileTextField
+import de.syntax.aemp.ui.component.profile.PasswordField
+import de.syntax.aemp.ui.component.profile.ProfileTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

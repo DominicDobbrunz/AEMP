@@ -22,7 +22,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.data.model.UserProfile
-import de.syntax.aemp.ui.component.ProfileTextField
+import de.syntax.aemp.ui.component.profile.ProfileTextField
 
 @Composable
 fun CompleteProfileScreen(onComplete: () -> Unit) {

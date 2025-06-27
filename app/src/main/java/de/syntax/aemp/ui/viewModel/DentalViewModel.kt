@@ -21,7 +21,7 @@ class DentalViewModel : ViewModel() {
     val error = _error.asStateFlow()
     private var skip = 0
     private val pageSize = 20
-    private var favorites = mutableSetOf<String>() // KNumbers gespeichert
+    private var favorites = mutableSetOf<String>()
     init {
         loadFavorites()
         loadDevices()
@@ -84,7 +84,7 @@ class DentalViewModel : ViewModel() {
                 }
                 _devices.value = uiList
             } catch (e: Exception) {
-                _error.value = "Suche fehlgeschlagen"
+                _error.value = "Dieses Gerät nicht gefunden"
             }
         }
     }

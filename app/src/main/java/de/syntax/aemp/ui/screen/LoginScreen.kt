@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,10 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import de.syntax.aemp.ui.component.BackgroundImage
-import de.syntax.aemp.ui.component.PasswordField
-import de.syntax.aemp.ui.component.ProfileTextField
+import de.syntax.aemp.R
+import de.syntax.aemp.ui.component.app.BackgroundImage
+import de.syntax.aemp.ui.component.profile.PasswordField
+import de.syntax.aemp.ui.component.profile.ProfileTextField
 
 @Composable
 fun LoginScreen(
@@ -81,7 +81,11 @@ fun LoginScreen(
                 onClick = onLoginWithGoogle,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.AccountCircle, contentDescription = null)
+                Icon(
+                    painter = painterResource(id = R.drawable.icons8_google_logo_48),
+                    contentDescription = "Google",
+                    modifier = Modifier
+                )
                 Spacer(Modifier.width(8.dp))
                 Text("Mit Google anmelden")
             }

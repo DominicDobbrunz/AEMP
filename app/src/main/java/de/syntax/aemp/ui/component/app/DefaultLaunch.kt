@@ -1,4 +1,4 @@
-package de.syntax.aemp.ui.component
+package de.syntax.aemp.ui.component.app
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -19,9 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import de.syntax.aemp.ui.component.BackgroundImage
-import de.syntax.aemp.ui.screen.CompleteProfileScreen
+import de.syntax.aemp.ui.component.app.BackgroundImage
 import de.syntax.aemp.ui.screen.DentalScreen
+import de.syntax.aemp.ui.screen.DeviceDetailScreen
 import de.syntax.aemp.ui.screen.FavoritesScreen
 import de.syntax.aemp.ui.screen.LoginScreen
 import de.syntax.aemp.ui.screen.ProfileCheckScreen
@@ -101,7 +101,7 @@ fun AppStart(
                     RegisterScreen(
                         navController = navController,
                         onRegisterSuccess = {
-                            navController.navigate("check_profile") {
+                            navController.navigate(BottomNavItem.Dental.route) {
                                 popUpTo("register") { inclusive = true }
                             }
                         }
@@ -119,14 +119,14 @@ fun AppStart(
                         }
                     )
                 }
-                composable("complete_profile") {
-                    CompleteProfileScreen {
-                        navController.navigate(BottomNavItem.Dental.route) {
-                            popUpTo("complete_profile") { inclusive = true }
-                        }
-                    }
+                composable("detail/{kNumber}") { backStackEntry ->
+                    val kNumber = backStackEntry.arguments?.getString("kNumber")
+                    DeviceDetailScreen(
+                        kNumber = kNumber,
+                        viewModel = viewModel(),
+                        navController = navController
+                    )
                 }
-
                 composable(BottomNavItem.Dental.route) {
                     DentalScreen(navController)
                 }
@@ -142,9 +142,6 @@ fun AppStart(
 }
 
 /*
-composable("detail/{kNumber}") { backStackEntry ->
-    val kNumber = backStackEntry.arguments?.getString("kNumber")
-    DeviceDetailScreen(kNumber, viewModel())
-}
+
 
  */

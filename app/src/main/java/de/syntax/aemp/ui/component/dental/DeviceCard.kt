@@ -1,4 +1,4 @@
-package de.syntax.aemp.ui.component
+package de.syntax.aemp.ui.component.dental
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -39,7 +39,6 @@ fun DeviceCard(
             .padding(8.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.65f))
     ) {
@@ -52,6 +51,7 @@ fun DeviceCard(
                 Text(
                     text = device.deviceName ?: "Unbekanntes Gerät",
                     style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -59,15 +59,18 @@ fun DeviceCard(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Hersteller: ${device.applicant ?: "k.A."}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White,
                 )
                 Text(
                     text = "Entscheidungsdatum: ${device.decisionDate ?: "?"}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White,
                 )
                 Text(
                     text = "K-Nummer: ${device.kNumber ?: "Unbekannt"}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White,
                 )
             }
 

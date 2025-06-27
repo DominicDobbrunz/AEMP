@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import de.syntax.aemp.ui.component.DeviceCard
+import de.syntax.aemp.ui.component.dental.DeviceCard
 import de.syntax.aemp.ui.viewModel.FavoritesViewModel
 
 
@@ -46,6 +46,7 @@ fun FavoritesScreen(
             Text(
                 text = "Noch keine Favoriten hinzugefügt.",
                 style = MaterialTheme.typography.bodyMedium,
+                color = Color.White,
                 modifier = Modifier.padding(16.dp)
             )
         } else {

@@ -88,16 +88,15 @@ fun SettingsScreen(
         profile?.let {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)),
-                elevation = CardDefaults.cardElevation(4.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Info von der Person und Praxis Anschrift", fontWeight = FontWeight.Medium)
+                    Text("Info von der Person und Praxis Anschrift", fontWeight = FontWeight.Medium, color = Color.White)
                     Spacer(Modifier.height(8.dp))
-                    Text("Name: ${it.firstName} ${it.lastName}")
-                    Text("Praxis: ${it.praxisName}")
-                    Text("Adresse: ${it.street}, ${it.postalCode} ${it.city}")
-                    Text("E-Mail: ${it.email}")
+                    Text("Name: ${it.firstName} ${it.lastName}", color = Color.White)
+                    Text("Praxis: ${it.praxisName}", color = Color.White)
+                    Text("Adresse: ${it.street}, ${it.postalCode} ${it.city}", color = Color.White)
+                    Text("E-Mail: ${it.email}", color = Color.White)
                 }
             }
         }
@@ -105,9 +104,9 @@ fun SettingsScreen(
         // Einstellungskarten
         val settingsItems = listOf(
             "Allgemeine Einstellung" to {},
+            "Account" to {},
             "Benachrichtigungen" to {},
             "Information" to {},
-            "Account" to {},
             "Support" to {},
             "Datenschutz" to {}
         )
@@ -117,14 +116,14 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onClick() },
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)),
-                elevation = CardDefaults.cardElevation(2.dp)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
             ) {
                 Text(
                     text = label,
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
                 )
             }
         }
@@ -156,7 +155,7 @@ fun SettingsScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Logout", color = Color.White)
+            Text("Logout")
         }
     }
 }

@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.data.model.UserProfile
-import de.syntax.aemp.ui.component.ProfileTextField
+import de.syntax.aemp.ui.component.profile.ProfileTextField
 
 @Composable
 fun EditProfileScreen(onSave: () -> Unit) {
