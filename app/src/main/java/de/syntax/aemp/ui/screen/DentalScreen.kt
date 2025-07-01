@@ -33,6 +33,11 @@ import de.syntax.aemp.ui.viewModel.DentalViewModel
 import de.syntax.aemp.ui.viewModel.FavoritesViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 
 
 @Composable
@@ -42,7 +47,6 @@ fun DentalScreen(
     favoritesViewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
 ) {
     val error by viewModel.error.collectAsState()
-
     var searchText by remember { mutableStateOf("") }
     var showSearch by remember { mutableStateOf(false) }
 
@@ -69,7 +73,11 @@ fun DentalScreen(
                 )
             }
         }
-        if (showSearch) {
+        AnimatedVisibility(
+            visible = showSearch,
+            enter = slideInVertically(initialOffsetY = { -50 }) + fadeIn(),
+            exit = slideOutVertically(targetOffsetY = { -50 }) + fadeOut()
+        ) {
             ProfileTextField(
                 value = searchText,
                 label = "Geräte suchen",

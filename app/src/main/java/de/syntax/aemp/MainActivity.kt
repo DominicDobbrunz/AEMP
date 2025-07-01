@@ -22,10 +22,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val isDarkTheme = isSystemInDarkTheme()
-
             AEMPTheme(darkTheme = isDarkTheme) {
                 val navigationBottomBarColor = MaterialTheme.colorScheme.secondary
-
                 val navigationBottomBarItemColors = NavigationBarItemDefaults.colors(
                     selectedIconColor = if (isDarkTheme) Color.Black else MaterialTheme.colorScheme.secondary,
                     unselectedIconColor = if (isDarkTheme) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
