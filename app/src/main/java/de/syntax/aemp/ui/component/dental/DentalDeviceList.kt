@@ -58,7 +58,7 @@ fun DentalDeviceList(
                         favoritesViewModel.toggleFavorite(DeviceUi(deviceUi.device, isFavorite))
                     }
                 ) {
-                    navController.navigate("detail/${deviceUi.device.kNumber}")
+                    navController.navigate("detail/${deviceUi.device.id}")
                 }
             }
             item {

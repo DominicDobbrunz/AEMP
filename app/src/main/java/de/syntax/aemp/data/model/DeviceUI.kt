@@ -1,5 +1,5 @@
 package de.syntax.aemp.data.model
-
+/*
 data class DeviceUi(
     val device: Device,
     val isFavorited: Boolean
@@ -10,3 +10,10 @@ data class DeviceUi(
     val applicant: String? = device.applicant
     val deviceName: String? = device.deviceName
 }
+
+ */
+
+data class DeviceUi(
+    val device: Device,
+    val isFavorited: Boolean
+)

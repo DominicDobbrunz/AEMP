@@ -10,7 +10,7 @@ import com.google.firebase.ktx.Firebase
 import de.syntax.aemp.data.model.DeviceUi
 import de.syntax.aemp.data.repository.DeviceRepository
 import kotlinx.coroutines.tasks.await
-
+/*
 class DentalViewModel : ViewModel() {
     private val repo = DeviceRepository()
     private val db = Firebase.firestore
@@ -86,6 +86,38 @@ class DentalViewModel : ViewModel() {
             } catch (e: Exception) {
                 _error.value = "Dieses Gerät nicht gefunden"
             }
+        }
+    }
+}
+
+ */
+
+class DentalViewModel : ViewModel() {
+    private val repo = DeviceRepository()
+    private val _devices = MutableStateFlow<List<DeviceUi>>(emptyList())
+    val devices: StateFlow<List<DeviceUi>> = _devices
+    private val _error = MutableStateFlow<String?>(null)
+    val error = _error.asStateFlow()
+
+    init {
+        loadDevices()
+    }
+
+    fun loadDevices() {
+        viewModelScope.launch {
+            try {
+                val list = repo.fetchDevices()
+                _devices.value = repo.getFavoriteDevices(list)
+            } catch (e: Exception) {
+                _error.value = "Fehler: ${e.message}"
+            }
+        }
+    }
+
+    fun toggleFavorite(deviceUi: DeviceUi) {
+        repo.toggleFavorite(deviceUi.device)
+        _devices.value = _devices.value.map {
+            it.copy(isFavorited = repo.isFavorite(it.device))
         }
     }
 }

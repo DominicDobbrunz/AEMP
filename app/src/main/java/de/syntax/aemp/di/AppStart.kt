@@ -72,15 +72,13 @@ fun AppStart(
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             BackgroundImage()
 
             NavHost(
                 navController = navController,
-                startDestination = if (user == null) "login" else "check_profile"
+                startDestination = if (user == null) "login" else "check_profile",
+                modifier = Modifier.padding(innerPadding)
             ) {
                 composable("login") {
                     LoginScreen(
@@ -94,7 +92,9 @@ fun AppStart(
                                 }
                             }
                         },
-                        onNavigateToRegister = { navController.navigate("register") }
+                        onNavigateToRegister = {
+                            navController.navigate("register")
+                        }
                     )
                 }
                 composable("register") {
@@ -119,13 +119,15 @@ fun AppStart(
                         }
                     )
                 }
-                composable("detail/{kNumber}") { backStackEntry ->
-                    val kNumber = backStackEntry.arguments?.getString("kNumber")
-                    DeviceDetailScreen(
-                        kNumber = kNumber,
-                        viewModel = viewModel(),
-                        navController = navController
-                    )
+                composable("detail/{id}") { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+                    if (id != null) {
+                        DeviceDetailScreen(
+                            id = id,
+                            viewModel = viewModel(),
+                            navController = navController
+                        )
+                    }
                 }
                 composable(BottomNavItem.Dental.route) {
                     DentalScreen(navController)

@@ -100,4 +100,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose.v277)
     implementation(libs.google.firebase.auth.ktx)
     implementation(libs.androidx.compose.material3.material3)
+    implementation(libs.coil.kt.coil.compose)
+    implementation(libs.converter.gson)
 }

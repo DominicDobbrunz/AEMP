@@ -17,13 +17,13 @@ class FavoritesViewModel : ViewModel() {
     val error: StateFlow<String?> = _error.asStateFlow()
 
     fun addFavorite(device: Device) {
-        if (_favorites.value.none { it.device.kNumber == device.kNumber }) {
+        if (_favorites.value.none { it.device.id == device.id }) {
             _favorites.value = _favorites.value + DeviceUi(device, isFavorited = true)
         }
     }
 
     fun removeFavorite(device: Device) {
-        _favorites.value = _favorites.value.filterNot { it.device.kNumber == device.kNumber }
+        _favorites.value = _favorites.value.filterNot { it.device.id == device.id }
     }
 
     fun toggleFavorite(deviceUi: DeviceUi) {
@@ -35,6 +35,6 @@ class FavoritesViewModel : ViewModel() {
     }
 
     fun isFavorite(device: Device): Boolean {
-        return _favorites.value.any { it.device.kNumber == device.kNumber }
+        return _favorites.value.any { it.device.id == device.id }
     }
 }
