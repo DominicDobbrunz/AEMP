@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -96,7 +97,6 @@ fun DeviceDetailScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // 🔙 Zurück
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
@@ -111,9 +111,7 @@ fun DeviceDetailScreen(
                 style = MaterialTheme.typography.titleLarge
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         if (deviceUi == null) {
             Text(
                 "Gerät nicht gefunden",
@@ -121,34 +119,28 @@ fun DeviceDetailScreen(
                 style = MaterialTheme.typography.titleLarge
             )
         } else {
-            val device = deviceUi.device // ✅ Zugriff auf das eigentliche Gerät
-
-            // 📷 Gerätebild oben
+            val device = deviceUi.device
             AsyncImage(
                 model = "http://10.0.2.2:8080/${device.image}",
                 contentDescription = "Gerätebild",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .width(350.dp)
+                    .height(250.dp)
+                    .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray),
+                alignment = Alignment.Center,
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            // ℹ️ Geräteinfos
             Text(
-                text = device.name ?: "Unbekanntes Gerät",
+                text = device.name,
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color.White
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
-            Text("Kategorie: ${device.category ?: "—"}", color = Color.White)
-            Text("Beschreibung: ${device.details ?: "—"}", color = Color.White)
-            Text("Geräte-ID: ${device.id}", color = Color.White)
+            Text("Kategorie: ${ device.category }", color = Color.White)
+            Text("Beschreibung: ${ device.details }", color = Color.White)
+            Text("Geräte-ID: ${ device.id }", color = Color.White)
         }
     }
 }

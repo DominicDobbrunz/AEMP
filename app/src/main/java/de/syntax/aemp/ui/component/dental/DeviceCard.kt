@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import de.syntax.aemp.data.model.Device
+
 /*
 @Composable
 fun DeviceCard(
@@ -100,8 +100,6 @@ fun DeviceCard(
     onFavClick: () -> Unit,
     onClick: () -> Unit
 ) {
-    val imageUrl = "http://10.0.2.2:8080/${device.image}"
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,21 +115,16 @@ fun DeviceCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // 📷 Bild links
             AsyncImage(
-                model = imageUrl,
+                model = "http://10.0.2.2:8080/${device.image}",
                 contentDescription = "Gerätebild",
                 modifier = Modifier
                     .size(80.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
-            // 📋 Info-Spalte
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -144,13 +137,11 @@ fun DeviceCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 Text(
                     text = "Kategorie: ${device.category}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White
                 )
-
                 Text(
                     text = device.details,
                     style = MaterialTheme.typography.bodySmall,
@@ -159,8 +150,6 @@ fun DeviceCard(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-
-            // ❤️ Favorit-Icon
             IconButton(onClick = onFavClick) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
