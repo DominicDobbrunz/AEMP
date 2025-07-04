@@ -1,15 +1,48 @@
 package de.syntax.aemp.ui.screen
 
+import android.Manifest
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,11 +56,13 @@ import coil3.compose.AsyncImage
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import de.syntax.aemp.data.model.UserProfile
 import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.data.repository.StorageRepository
-import de.syntax.aemp.data.model.UserProfile
+import de.syntax.aemp.ui.alert.ImagePickerDialog
 import de.syntax.aemp.ui.viewModel.UserViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -36,27 +71,36 @@ fun SettingsScreen(
     val user = Firebase.auth.currentUser
     var profile by remember { mutableStateOf<UserProfile?>(null) }
     val context = LocalContext.current
-
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            val uid = user?.uid ?: return@let
-            StorageRepository.uploadProfileImage(uid, it) { url ->
-                if (url != null) {
-                    Firebase.firestore.collection("users").document(uid)
-                        .update("profileImageUrl", url)
-                } else {
-                    Toast.makeText(context, "Fehler beim Hochladen", Toast.LENGTH_SHORT).show()
-                }
+    var expanded by remember { mutableStateOf(false) }
+    var showSheet by remember { mutableStateOf(false) }
+    var showImagePicker by remember { mutableStateOf(false) }
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val cameraPermission = Manifest.permission.CAMERA
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            showImagePicker = true
+        } else {
+            Toast.makeText(context, "Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun handleImageSelected(uri: Uri) {
+        val uid = user?.uid ?: return
+        StorageRepository.uploadProfileImage(uid, uri) { url ->
+            if (url != null) {
+                Firebase.firestore.collection("users").document(uid)
+                    .update("profileImageUrl", url)
+            } else {
+                Toast.makeText(context, "Fehler beim Hochladen", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
     LaunchedEffect(true) {
         FirebaseRepository.getUserProfile {
             profile = it
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,27 +108,80 @@ fun SettingsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Kopfzeile mit Titel & Bild
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Einstellungen",
+            Text(
+                text = "Einstellungen",
                 color = Color.White,
                 style = MaterialTheme.typography.titleLarge
-                )
-            AsyncImage(
-                model = profile?.profileImageUrl ?: user?.photoUrl,
-                contentDescription = "Profilbild",
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .clickable { launcher.launch("image/*") }
             )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AsyncImage(
+                    model = profile?.profileImageUrl ?: user?.photoUrl,
+                    contentDescription = "Profilbild",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            cameraPermissionLauncher.launch(cameraPermission)
+                        }
+                )
+                Spacer(Modifier.width(8.dp))
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "Mehr", tint = Color.White)
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = "Profil bearbeiten",
+                                    color = Color.White
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.AccountCircle,
+                                    contentDescription = "Profil bearbeiten",
+                                    tint = Color.White
+                                )
+                            },
+                            onClick = {
+                                expanded = false
+                                showSheet = true
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = "Profilbild hinzufügen",
+                                    color = Color.White
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.CameraAlt,
+                                    contentDescription = "Kamera",
+                                    tint = Color.White
+                                )
+                            },
+                            onClick = {
+                                expanded = false
+                                cameraPermissionLauncher.launch(cameraPermission)
+                            }
+                        )
+                    }
+                }
+            }
         }
-
-        // Nutzerinfo in transparenter Card
         profile?.let {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -100,8 +197,6 @@ fun SettingsScreen(
                 }
             }
         }
-
-        // Einstellungskarten
         val settingsItems = listOf(
             "Allgemeine Einstellung" to {},
             "Account" to {},
@@ -110,7 +205,6 @@ fun SettingsScreen(
             "Support" to {},
             "Datenschutz" to {}
         )
-
         settingsItems.forEach { (label, onClick) ->
             Card(
                 modifier = Modifier
@@ -127,10 +221,7 @@ fun SettingsScreen(
                 )
             }
         }
-
         Spacer(Modifier.weight(1f))
-
-        // E-Mail Verifikation
         if (user != null && !user.isEmailVerified) {
             Text("E-Mail nicht verifiziert!", color = Color.Red)
             Button(
@@ -143,8 +234,6 @@ fun SettingsScreen(
                 Text("E-Mail verifizieren")
             }
         }
-
-        // Logout unten
         Button(
             onClick = {
                 Firebase.auth.signOut()
@@ -157,5 +246,26 @@ fun SettingsScreen(
         ) {
             Text("Logout")
         }
+    }
+    if (showSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSheet = false },
+            sheetState = bottomSheetState,
+            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.8f)
+        ) {
+            EditProfileScreen(
+                onSave = { showSheet = false },
+                onCancel = { showSheet = false }
+            )
+        }
+    }
+    if (showImagePicker) {
+        ImagePickerDialog(
+            onImageSelected = {
+                handleImageSelected(it)
+                showImagePicker = false
+            },
+            onDismiss = { showImagePicker = false }
+        )
     }
 }

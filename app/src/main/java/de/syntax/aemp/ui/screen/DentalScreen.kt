@@ -39,7 +39,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 
-
 @Composable
 fun DentalScreen(
     navController: NavController,

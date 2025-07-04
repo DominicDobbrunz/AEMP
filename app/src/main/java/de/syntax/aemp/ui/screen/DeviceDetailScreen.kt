@@ -29,58 +29,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import de.syntax.aemp.R
 import de.syntax.aemp.ui.viewModel.DentalViewModel
-/*
-@Composable
-fun DeviceDetailScreen(
-    kNumber: String?,
-    viewModel: DentalViewModel,
-    navController: NavController
-) {
-    val devices = viewModel.devices.collectAsState().value
-    val device = devices.find { it.kNumber == kNumber }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Row(
-            modifier = Modifier,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icons8_doppelt_links_48),
-                    contentDescription = "Zurück",
-                    tint = Color.White,
-                    modifier = Modifier
-                )
-            }
-            Text("Details",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (device == null) {
-            Text(
-                "Gerät nicht gefunden",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
-        } else {
-            Text(
-                device.deviceName ?: "—",
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White
-            )
-            Spacer(Modifier.height(8.dp))
-            Text("Hersteller: ${device.applicant ?: "—"}", color = Color.White)
-            Text("Datum: ${device.decisionDate ?: "—"}", color = Color.White)
-            Text("Regulationsnr.: ${device.regulationNumber ?: "—"}", color = Color.White)
-            Text("K‑Nummer: ${device.kNumber ?: "—"}", color = Color.White)
-        }
-    }
-}
-
- */
 
 @Composable
 fun DeviceDetailScreen(

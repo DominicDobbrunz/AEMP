@@ -31,68 +31,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import de.syntax.aemp.data.model.Device
 
-/*
-@Composable
-fun DeviceCard(
-    device: Device,
-    isFavorite: Boolean,
-    onFavClick: () -> Unit,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.65f))
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = device.deviceName ?: "Unbekanntes Gerät",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "Hersteller: ${device.applicant ?: "k.A."}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                )
-                Text(
-                    text = "Entscheidungsdatum: ${device.decisionDate ?: "?"}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                )
-                Text(
-                    text = "K-Nummer: ${device.kNumber ?: "Unbekannt"}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                )
-            }
-
-            IconButton(onClick = { onFavClick() }) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorit",
-                    tint = if (isFavorite) Color.Red else Color.Gray
-                )
-            }
-        }
-    }
-}
-
- */
-
 @Composable
 fun DeviceCard(
     device: Device,

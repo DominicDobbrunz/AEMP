@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import de.syntax.aemp.ui.component.app.BackgroundImage
 import de.syntax.aemp.ui.screen.DentalScreen
 import de.syntax.aemp.ui.screen.DeviceDetailScreen
+import de.syntax.aemp.ui.screen.EditProfileScreen
 import de.syntax.aemp.ui.screen.FavoritesScreen
 import de.syntax.aemp.ui.screen.LoginScreen
 import de.syntax.aemp.ui.screen.ProfileCheckScreen
@@ -128,6 +129,11 @@ fun AppStart(
                             navController = navController
                         )
                     }
+                }
+                composable("editProfile") {
+                    EditProfileScreen(onSave = {
+                        navController.popBackStack()
+                    })
                 }
                 composable(BottomNavItem.Dental.route) {
                     DentalScreen(navController)
