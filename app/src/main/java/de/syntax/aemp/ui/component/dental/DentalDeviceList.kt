@@ -30,44 +30,38 @@ import de.syntax.aemp.ui.viewModel.FavoritesViewModel
 @Composable
 fun DentalDeviceList(
     navController: NavController,
-    viewModel: DentalViewModel = viewModel(),
-    favoritesViewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner),
-    searchText: String
+    devices: List<DeviceUi>,
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit,
+    onFavoriteToggle: (DeviceUi) -> Unit,
+    favoritesViewModel: FavoritesViewModel
 ) {
-    val devices by viewModel.devices.collectAsState()
-    var selectedCategory by remember { mutableStateOf("Alle Geräte") }
     var showDialog by remember { mutableStateOf(false) }
 
     Column {
-
         Spacer(Modifier.height(8.dp))
-        DentalFilterBar(
-            selectedCategory = selectedCategory,
-            onCategorySelected = { selectedCategory = it }
-        )
+        // Geräteliste
         LazyColumn {
             items(devices) { deviceUi ->
                 val isFavorite = favoritesViewModel.isFavorite(deviceUi.device)
+
                 DeviceCard(
                     device = deviceUi.device,
                     isFavorite = isFavorite,
                     onFavClick = {
-                        if (!isFavorite) {
-                            showDialog = true
-                        }
-                        favoritesViewModel.toggleFavorite(DeviceUi(deviceUi.device, isFavorite))
+                        if (!isFavorite) showDialog = true
+                        onFavoriteToggle(deviceUi)
                     }
                 ) {
                     navController.navigate("detail/${deviceUi.device.id}")
                 }
             }
+            // Optional: Loading spinner oder End-of-List anzeigen
             item {
-                LaunchedEffect(devices.size) {
-                    viewModel.loadDevices()
-                }
                 CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             }
         }
+        // Info Dialog
         if (showDialog) {
             FavoriteAddedDialog { showDialog = false }
         }

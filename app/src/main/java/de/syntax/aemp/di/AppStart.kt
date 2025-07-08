@@ -20,13 +20,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax.aemp.ui.component.app.BackgroundImage
+import de.syntax.aemp.ui.screen.AccountScreen
 import de.syntax.aemp.ui.screen.DentalScreen
 import de.syntax.aemp.ui.screen.DeviceDetailScreen
 import de.syntax.aemp.ui.screen.EditProfileScreen
 import de.syntax.aemp.ui.screen.FavoritesScreen
+import de.syntax.aemp.ui.screen.InformationScreen
 import de.syntax.aemp.ui.screen.LoginScreen
 import de.syntax.aemp.ui.screen.ProfileCheckScreen
 import de.syntax.aemp.ui.screen.RegisterScreen
+import de.syntax.aemp.ui.screen.SettingsAdvancedScreen
 import de.syntax.aemp.ui.screen.SettingsScreen
 import de.syntax.aemp.ui.viewModel.UserViewModel
 
@@ -134,6 +137,15 @@ fun AppStart(
                     EditProfileScreen(onSave = {
                         navController.popBackStack()
                     })
+                }
+                composable("account") {
+                    AccountScreen(navController)
+                }
+                composable("settings_advanced") {
+                    SettingsAdvancedScreen(navController)
+                }
+                composable("information") {
+                    InformationScreen(navController)
                 }
                 composable(BottomNavItem.Dental.route) {
                     DentalScreen(navController)

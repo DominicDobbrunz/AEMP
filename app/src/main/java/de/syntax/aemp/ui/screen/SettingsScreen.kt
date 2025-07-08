@@ -17,19 +17,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,7 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,26 +54,31 @@ import coil3.compose.AsyncImage
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import de.syntax.aemp.R
 import de.syntax.aemp.data.model.UserProfile
 import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.data.repository.StorageRepository
 import de.syntax.aemp.ui.alert.ImagePickerDialog
+import de.syntax.aemp.ui.viewModel.SettingViewModel
 import de.syntax.aemp.ui.viewModel.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    userViewModel: UserViewModel = viewModel()
+    userViewModel: UserViewModel = viewModel(),
+    settingsViewModel: SettingViewModel = viewModel()
 ) {
     val user = Firebase.auth.currentUser
     var profile by remember { mutableStateOf<UserProfile?>(null) }
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
     var showSheet by remember { mutableStateOf(false) }
     var showImagePicker by remember { mutableStateOf(false) }
+    var imagePickerRequested by remember { mutableStateOf(false) }
+
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val cameraPermission = Manifest.permission.CAMERA
+
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -85,6 +88,7 @@ fun SettingsScreen(
             Toast.makeText(context, "Kamera-Berechtigung erforderlich", Toast.LENGTH_SHORT).show()
         }
     }
+
     fun handleImageSelected(uri: Uri) {
         val uid = user?.uid ?: return
         StorageRepository.uploadProfileImage(uid, uri) { url ->
@@ -96,11 +100,13 @@ fun SettingsScreen(
             }
         }
     }
+
     LaunchedEffect(true) {
         FirebaseRepository.getUserProfile {
             profile = it
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,103 +114,90 @@ fun SettingsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        // 📷 Profilbild + Name
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Einstellungen",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AsyncImage(
-                    model = profile?.profileImageUrl ?: user?.photoUrl,
-                    contentDescription = "Profilbild",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            cameraPermissionLauncher.launch(cameraPermission)
-                        }
-                )
-                Spacer(Modifier.width(8.dp))
-                Box {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Mehr", tint = Color.White)
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = "Profil bearbeiten",
-                                    color = Color.White
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.AccountCircle,
-                                    contentDescription = "Profil bearbeiten",
-                                    tint = Color.White
-                                )
-                            },
-                            onClick = {
-                                expanded = false
-                                showSheet = true
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = "Profilbild hinzufügen",
-                                    color = Color.White
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.CameraAlt,
-                                    contentDescription = "Kamera",
-                                    tint = Color.White
-                                )
-                            },
-                            onClick = {
-                                expanded = false
-                                cameraPermissionLauncher.launch(cameraPermission)
-                            }
-                        )
-                    }
+            val imageUrl = profile?.profileImageUrl?.takeIf { it.isNotBlank() }
+                ?: user?.photoUrl?.toString()?.takeIf { it.isNotBlank() }
+
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray.copy(alpha = 0.3f))
+                    .clickable {
+                        imagePickerRequested = true
+                        cameraPermissionLauncher.launch(cameraPermission)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if (imageUrl != null) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = "Profilbild",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.matchParentSize()
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icons8_benutzer_100),
+                        contentDescription = "Profilbild",
+                        tint = Color.White,
+                        modifier = Modifier.size(100.dp) // kleiner als der ganze Kreis
+                    )
                 }
             }
+
+            Spacer(Modifier.height(8.dp))
+            Text(
+                "${profile?.firstName ?: "Nutzer"} ${profile?.lastName ?: ""}",
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
+
+        // 🏥 Praxis-Anschrift + Bearbeiten Button
         profile?.let {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Info von der Person und Praxis Anschrift", fontWeight = FontWeight.Medium, color = Color.White)
-                    Spacer(Modifier.height(8.dp))
-                    Text("Name: ${it.firstName} ${it.lastName}", color = Color.White)
-                    Text("Praxis: ${it.praxisName}", color = Color.White)
-                    Text("Adresse: ${it.street}, ${it.postalCode} ${it.city}", color = Color.White)
-                    Text("E-Mail: ${it.email}", color = Color.White)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top // 👈 das sorgt für vertikale Ausrichtung oben
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Anschrift:", fontWeight = FontWeight.Medium, color = Color.White)
+                        Spacer(Modifier.height(8.dp))
+                        Text("Praxis: ${it.praxisName}", color = Color.White)
+                        Text("Adresse: ${it.street}, ${it.postalCode} ${it.city}", color = Color.White)
+                    }
+
+                    IconButton(onClick = { showSheet = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Bearbeiten",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
         }
+
+        // ⚙️ Navigationskarten
         val settingsItems = listOf(
-            "Allgemeine Einstellung" to {},
-            "Account" to {},
-            "Benachrichtigungen" to {},
-            "Information" to {},
-            "Support" to {},
-            "Datenschutz" to {}
+            "Einstellungen" to { navController.navigate("settings_advanced") },
+            "Account" to { navController.navigate("account") },
+            "Information" to { navController.navigate("information") },
+            "Support" to { navController.navigate("support") },
+            "Datenschutz" to { navController.navigate("privacy") }
         )
+
         settingsItems.forEach { (label, onClick) ->
             Card(
                 modifier = Modifier
@@ -221,19 +214,10 @@ fun SettingsScreen(
                 )
             }
         }
+
         Spacer(Modifier.weight(1f))
-        if (user != null && !user.isEmailVerified) {
-            Text("E-Mail nicht verifiziert!", color = Color.Red)
-            Button(
-                onClick = {
-                    user.sendEmailVerification()
-                    Toast.makeText(context, "Verifizierungslink gesendet", Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier.padding(vertical = 8.dp)
-            ) {
-                Text("E-Mail verifizieren")
-            }
-        }
+
+        // ⏏️ Logout
         Button(
             onClick = {
                 Firebase.auth.signOut()
@@ -244,14 +228,16 @@ fun SettingsScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Logout")
+            Text("Ausloggen")
         }
     }
+
+    // 📝 Anschrift bearbeiten Sheet
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
             sheetState = bottomSheetState,
-            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.8f)
+            containerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
         ) {
             EditProfileScreen(
                 onSave = { showSheet = false },
@@ -259,13 +245,19 @@ fun SettingsScreen(
             )
         }
     }
-    if (showImagePicker) {
+
+    // 📸 Bildauswahl nach Berechtigung
+    if (imagePickerRequested && showImagePicker) {
         ImagePickerDialog(
             onImageSelected = {
                 handleImageSelected(it)
                 showImagePicker = false
+                imagePickerRequested = false
             },
-            onDismiss = { showImagePicker = false }
+            onDismiss = {
+                showImagePicker = false
+                imagePickerRequested = false
+            }
         )
     }
 }

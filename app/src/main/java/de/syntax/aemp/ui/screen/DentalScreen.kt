@@ -38,6 +38,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import de.syntax.aemp.ui.component.dental.DentalFilterBar
 
 @Composable
 fun DentalScreen(
@@ -46,7 +47,8 @@ fun DentalScreen(
     favoritesViewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
 ) {
     val error by viewModel.error.collectAsState()
-    var searchText by remember { mutableStateOf("") }
+    val devices by viewModel.devices.collectAsState()
+
     var showSearch by remember { mutableStateOf(false) }
 
     Column(
@@ -78,20 +80,26 @@ fun DentalScreen(
             exit = slideOutVertically(targetOffsetY = { -50 }) + fadeOut()
         ) {
             ProfileTextField(
-                value = searchText,
+                value = viewModel.searchText,
                 label = "Geräte suchen",
-                onValueChange = { searchText = it }
+                onValueChange = { viewModel.onSearchTextChange(it) }
             )
         }
         Spacer(Modifier.height(8.dp))
+        DentalFilterBar(
+            selectedCategory = viewModel.selectedCategory,
+            onCategorySelected = { viewModel.onCategorySelected(it) }
+        )
         if (error != null) {
             Text("❌ $error", color = Color.Red)
         }
         DentalDeviceList(
             navController = navController,
-            viewModel = viewModel,
-            favoritesViewModel = favoritesViewModel,
-            searchText = searchText
+            devices = devices,
+            selectedCategory = viewModel.selectedCategory,
+            onCategorySelected = { viewModel.onCategorySelected(it) },
+            onFavoriteToggle = { viewModel.toggleFavorite(it) },
+            favoritesViewModel = favoritesViewModel
         )
         Spacer(Modifier.height(8.dp))
         Button(

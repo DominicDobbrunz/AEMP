@@ -102,4 +102,5 @@ dependencies {
     implementation(libs.androidx.compose.material3.material3)
     implementation(libs.coil.kt.coil.compose)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.datastore.preferences.v100)
 }
