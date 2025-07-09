@@ -7,4 +7,6 @@ data class Device(
     val category: String,
     val details: String,
     val image: String
-)
+) {
+    constructor() : this(0, "", "", "", "")
+}

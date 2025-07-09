@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax.aemp.ui.component.app.BackgroundImage
 import de.syntax.aemp.ui.screen.AccountScreen
+import de.syntax.aemp.ui.screen.DataProtectionScreen
 import de.syntax.aemp.ui.screen.DentalScreen
 import de.syntax.aemp.ui.screen.DeviceDetailScreen
 import de.syntax.aemp.ui.screen.EditProfileScreen
@@ -31,6 +32,7 @@ import de.syntax.aemp.ui.screen.ProfileCheckScreen
 import de.syntax.aemp.ui.screen.RegisterScreen
 import de.syntax.aemp.ui.screen.SettingsAdvancedScreen
 import de.syntax.aemp.ui.screen.SettingsScreen
+import de.syntax.aemp.ui.screen.SupportScreen
 import de.syntax.aemp.ui.viewModel.UserViewModel
 
 @Composable
@@ -146,6 +148,12 @@ fun AppStart(
                 }
                 composable("information") {
                     InformationScreen(navController)
+                }
+                composable("support") {
+                    SupportScreen(navController)
+                }
+                composable("privacy") {
+                    DataProtectionScreen(navController)
                 }
                 composable(BottomNavItem.Dental.route) {
                     DentalScreen(navController)
