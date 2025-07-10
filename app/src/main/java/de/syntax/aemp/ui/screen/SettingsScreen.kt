@@ -59,6 +59,7 @@ import de.syntax.aemp.data.model.UserProfile
 import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.data.repository.StorageRepository
 import de.syntax.aemp.ui.alert.ImagePickerDialog
+import de.syntax.aemp.ui.alert.LogoutAlert
 import de.syntax.aemp.ui.viewModel.SettingViewModel
 import de.syntax.aemp.ui.viewModel.UserViewModel
 
@@ -74,6 +75,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     var showSheet by remember { mutableStateOf(false) }
     var showImagePicker by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
     var imagePickerRequested by remember { mutableStateOf(false) }
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -106,7 +108,6 @@ fun SettingsScreen(
             profile = it
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,14 +115,12 @@ fun SettingsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 📷 Profilbild + Name
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
             val imageUrl = profile?.profileImageUrl?.takeIf { it.isNotBlank() }
                 ?: user?.photoUrl?.toString()?.takeIf { it.isNotBlank() }
-
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -149,7 +148,6 @@ fun SettingsScreen(
                     )
                 }
             }
-
             Spacer(Modifier.height(8.dp))
             Text(
                 "${profile?.firstName ?: "Nutzer"} ${profile?.lastName ?: ""}",
@@ -157,8 +155,6 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
-        // 🏥 Praxis-Anschrift + Bearbeiten Button
         profile?.let {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -177,7 +173,6 @@ fun SettingsScreen(
                         Text("Praxis: ${it.praxisName}", color = Color.White)
                         Text("Adresse: ${it.street}, ${it.postalCode} ${it.city}", color = Color.White)
                     }
-
                     IconButton(onClick = { showSheet = true }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
@@ -188,8 +183,6 @@ fun SettingsScreen(
                 }
             }
         }
-
-        // ⚙️ Navigationskarten
         val settingsItems = listOf(
             "Einstellungen" to { navController.navigate("settings_advanced") },
             "Account" to { navController.navigate("account") },
@@ -197,7 +190,6 @@ fun SettingsScreen(
             "Support" to { navController.navigate("support") },
             "Datenschutz" to { navController.navigate("privacy") }
         )
-
         settingsItems.forEach { (label, onClick) ->
             Card(
                 modifier = Modifier
@@ -214,25 +206,26 @@ fun SettingsScreen(
                 )
             }
         }
-
         Spacer(Modifier.weight(1f))
-
-        // ⏏️ Logout
         Button(
-            onClick = {
+            onClick = { showLogoutDialog = true },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Ausloggen")
+        }
+        LogoutAlert(
+            showDialog = showLogoutDialog,
+            onDismiss = { showLogoutDialog = false },
+            onConfirmLogout = {
+                showLogoutDialog = false
                 Firebase.auth.signOut()
                 navController.navigate("login") {
                     popUpTo("settings") { inclusive = true }
                     launchSingleTop = true
                 }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Ausloggen")
-        }
+            }
+        )
     }
-
-    // 📝 Anschrift bearbeiten Sheet
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
@@ -245,8 +238,6 @@ fun SettingsScreen(
             )
         }
     }
-
-    // 📸 Bildauswahl nach Berechtigung
     if (imagePickerRequested && showImagePicker) {
         ImagePickerDialog(
             onImageSelected = {

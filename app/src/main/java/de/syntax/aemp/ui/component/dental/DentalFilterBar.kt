@@ -25,7 +25,7 @@ fun DentalFilterBar(
         "Kleine-Autoclaven",
         "Thermodesinfektion",
         "Siegelgeräte",
-        "Sterielgutlagerung",
+        "Sterilgutlagerung",
         "Dokumentation",
         "Pflege",
         "Wasser-Aufbereitung",
