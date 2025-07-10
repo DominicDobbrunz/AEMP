@@ -101,12 +101,5 @@ fun DentalScreen(
             onFavoriteToggle = { viewModel.toggleFavorite(it) },
             favoritesViewModel = favoritesViewModel
         )
-        Spacer(Modifier.height(8.dp))
-        Button(
-            onClick = { viewModel.loadDevices() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Mehr laden")
-        }
     }
 }

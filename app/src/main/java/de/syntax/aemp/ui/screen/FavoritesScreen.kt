@@ -64,7 +64,7 @@ fun FavoritesScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.favoritepicture),
+                    painter = painterResource(id = R.drawable.favoritepicture1),
                     contentDescription = "Keine Favoriten",
                     modifier = Modifier.size(300.dp)
                 )

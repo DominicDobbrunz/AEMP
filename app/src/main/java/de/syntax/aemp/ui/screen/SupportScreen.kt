@@ -49,11 +49,11 @@ fun SupportScreen(navController: NavHostController) {
                     "\n" +
                     "\uD83D\uDCE7 E-Mail Support\n" +
                     "Bei Fragen, Problemen oder Feedback kannst du uns jederzeit per E-Mail erreichen:\n" +
-                    "support@deineapp.de\n" +
+                    "support@aemp.de\n" +
                     "\n" +
                     "\uD83D\uDCD6 Hilfe & FAQ\n" +
                     "Antworten auf häufig gestellte Fragen findest du in unserem Hilfe-Bereich:\n" +
-                    "www.deineapp.de/hilfe\n" +
+                    "www.aemp.de/hilfe\n" +
                     "\n" +
                     "\uD83D\uDCA1 Feature-Vorschläge\n" +
                     "Du hast Ideen oder Wünsche für neue Funktionen? Schreib uns – wir freuen uns über dein Feedback!\n" +
