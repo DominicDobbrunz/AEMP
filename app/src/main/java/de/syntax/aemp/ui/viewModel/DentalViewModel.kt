@@ -5,14 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import de.syntax.aemp.data.model.DeviceUi
 import de.syntax.aemp.data.repository.DeviceRepository
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class DentalViewModel : ViewModel() {
     private val repo = DeviceRepository()
@@ -24,6 +22,8 @@ class DentalViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
+    private var favoritesViewModel: FavoritesViewModel? = null
+
     var searchText by mutableStateOf("")
         private set
 
@@ -34,7 +34,7 @@ class DentalViewModel : ViewModel() {
         loadDevices()
     }
 
-    fun loadDevices() {
+    private fun loadDevices() {
         viewModelScope.launch {
             try {
                 val list = repo.fetchDevices()
@@ -47,11 +47,21 @@ class DentalViewModel : ViewModel() {
         }
     }
 
+    fun setFavoritesViewModel(vm: FavoritesViewModel) {
+        favoritesViewModel = vm
+    }
+
     fun toggleFavorite(deviceUi: DeviceUi) {
         repo.toggleFavorite(deviceUi.device)
         _devices.value = _devices.value.map {
             it.copy(isFavorited = repo.isFavorite(it.device))
         }
+        if (deviceUi.isFavorited) {
+            favoritesViewModel?.removeFavorite(deviceUi.device)
+        } else {
+            favoritesViewModel?.addFavorite(deviceUi.device)
+        }
+        favoritesViewModel?.loadFavorites()
     }
 
     fun onSearchTextChange(text: String) {

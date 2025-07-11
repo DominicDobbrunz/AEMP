@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -72,12 +73,12 @@ fun DeviceDetailScreen(
                 model = "http://10.0.2.2:8080/${device.image}",
                 contentDescription = "Gerätebild",
                 modifier = Modifier
-                    .width(350.dp)
-                    .height(250.dp)
+                    .fillMaxWidth()
+                    .heightIn(min = 150.dp, max = 400.dp) // dynamische Höhe je nach Bild
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray),
                 alignment = Alignment.Center,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit // 🔁 Bild wird nicht zugeschnitten
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(

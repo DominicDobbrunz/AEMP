@@ -1,15 +1,14 @@
 package de.syntax.aemp.ui.viewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import de.syntax.aemp.data.model.Device
 import de.syntax.aemp.data.model.DeviceUi
-import de.syntax.aemp.data.repository.DeviceRepository
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class FavoritesViewModel : ViewModel() {
 
@@ -28,7 +27,7 @@ class FavoritesViewModel : ViewModel() {
 
     private fun getUserId(): String? = auth.currentUser?.uid
 
-    private fun loadFavorites() {
+    fun loadFavorites() {
         val userId = getUserId() ?: return
         db.collection("users")
             .document(userId)
@@ -51,7 +50,7 @@ class FavoritesViewModel : ViewModel() {
         docRef.set(device) // Device als vollständiges Objekt speichern
 
         if (_favorites.value.none { it.device.id == device.id }) {
-            _favorites.value = _favorites.value + DeviceUi(device, isFavorited = true)
+            _favorites.value += DeviceUi(device, isFavorited = true)
         }
     }
 

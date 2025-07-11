@@ -38,6 +38,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.HorizontalDivider
 import de.syntax.aemp.ui.component.dental.DentalFilterBar
 
 @Composable
@@ -93,6 +94,7 @@ fun DentalScreen(
         if (error != null) {
             Text("❌ $error", color = Color.Red)
         }
+        HorizontalDivider()
         DentalDeviceList(
             navController = navController,
             devices = devices,
@@ -101,5 +103,6 @@ fun DentalScreen(
             onFavoriteToggle = { viewModel.toggleFavorite(it) },
             favoritesViewModel = favoritesViewModel
         )
+        HorizontalDivider()
     }
 }
