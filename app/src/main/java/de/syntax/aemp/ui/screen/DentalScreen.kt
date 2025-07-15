@@ -42,21 +42,14 @@ import androidx.compose.material3.HorizontalDivider
 import de.syntax.aemp.ui.component.dental.DentalFilterBar
 
 @Composable
-fun DentalScreen(
-    navController: NavController,
-    viewModel: DentalViewModel = viewModel(),
-    favoritesViewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
-) {
-    val error by viewModel.error.collectAsState()
+fun DentalScreen(navController: NavController) {
+    val viewModel: DentalViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
+    val favoritesViewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
     val devices by viewModel.devices.collectAsState()
+    val favorites by favoritesViewModel.devices.collectAsState()
+    val error by viewModel.error.collectAsState()
 
-    var showSearch by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,7 +60,7 @@ fun DentalScreen(
                 color = Color.White,
                 style = MaterialTheme.typography.titleLarge
             )
-            IconButton(onClick = { showSearch = !showSearch }) {
+            IconButton(onClick = { /* showSearch = !showSearch */ }) {
                 Icon(
                     painter = painterResource(id = R.drawable.icons8_lupe_48),
                     contentDescription = "Suche",
@@ -76,7 +69,7 @@ fun DentalScreen(
             }
         }
         AnimatedVisibility(
-            visible = showSearch,
+            visible = false, // showSearch, // Removed as per edit hint
             enter = slideInVertically(initialOffsetY = { -50 }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { -50 }) + fadeOut()
         ) {
@@ -92,16 +85,14 @@ fun DentalScreen(
             onCategorySelected = { viewModel.onCategorySelected(it) }
         )
         if (error != null) {
-            Text("❌ $error", color = Color.Red)
+            Text(text = error ?: "", color = Color.Red)
         }
         HorizontalDivider()
         DentalDeviceList(
             navController = navController,
             devices = devices,
-            selectedCategory = viewModel.selectedCategory,
-            onCategorySelected = { viewModel.onCategorySelected(it) },
-            onFavoriteToggle = { viewModel.toggleFavorite(it) },
-            favoritesViewModel = favoritesViewModel
+            favorites = favorites,
+            onFavoriteToggle = { device -> favoritesViewModel.toggleFavorite(device) }
         )
         HorizontalDivider()
     }

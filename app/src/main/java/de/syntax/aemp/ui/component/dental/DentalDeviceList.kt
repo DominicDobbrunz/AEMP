@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.syntax.aemp.data.model.DeviceUi
+import de.syntax.aemp.data.model.Device
 import de.syntax.aemp.ui.alert.FavoriteAddedDialog
 import de.syntax.aemp.ui.viewModel.DentalViewModel
 import de.syntax.aemp.ui.viewModel.FavoritesViewModel
@@ -30,11 +30,9 @@ import de.syntax.aemp.ui.viewModel.FavoritesViewModel
 @Composable
 fun DentalDeviceList(
     navController: NavController,
-    devices: List<DeviceUi>,
-    selectedCategory: String,
-    onCategorySelected: (String) -> Unit,
-    onFavoriteToggle: (DeviceUi) -> Unit,
-    favoritesViewModel: FavoritesViewModel
+    devices: List<Device>,
+    favorites: List<Device>,
+    onFavoriteToggle: (Device) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -42,18 +40,18 @@ fun DentalDeviceList(
         Spacer(Modifier.height(8.dp))
         // Geräteliste
         LazyColumn {
-            items(devices) { deviceUi ->
-                val isFavorite = favoritesViewModel.isFavorite(deviceUi.device)
+            items(devices) { device ->
+                val isFavorite = favorites.any { it.id == device.id }
 
                 DeviceCard(
-                    device = deviceUi.device,
+                    device = device,
                     isFavorite = isFavorite,
                     onFavClick = {
                         if (!isFavorite) showDialog = true
-                        onFavoriteToggle(deviceUi)
+                        onFavoriteToggle(device)
                     }
                 ) {
-                    navController.navigate("detail/${deviceUi.device.id}")
+                    navController.navigate("detail/${device.id}")
                 }
             }
             // Optional: Loading spinner oder End-of-List anzeigen

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,9 @@ fun FavoritesScreen(
     navController: NavHostController,
     viewModel: FavoritesViewModel = viewModel(LocalContext.current as ViewModelStoreOwner)
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadFavorites()
+    }
     val devices by viewModel.devices.collectAsState()
     val error by viewModel.error.collectAsState()
 
@@ -77,12 +81,12 @@ fun FavoritesScreen(
             }
         } else {
             LazyColumn {
-                items(devices) { deviceUi ->
+                items(devices) { device ->
                     DeviceCard(
-                        device = deviceUi.device,
+                        device = device,
                         isFavorite = true,
-                        onFavClick = { viewModel.toggleFavorite(deviceUi) },
-                        onClick = { navController.navigate("detail/${deviceUi.device.id}") }
+                        onFavClick = { viewModel.toggleFavorite(device) },
+                        onClick = { navController.navigate("detail/${device.id}") }
                     )
                 }
             }

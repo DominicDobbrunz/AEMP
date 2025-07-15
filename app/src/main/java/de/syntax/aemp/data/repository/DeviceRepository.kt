@@ -2,7 +2,6 @@ package de.syntax.aemp.data.repository
 
 import de.syntax.aemp.data.model.Device
 import de.syntax.aemp.data.api.RetrofitInstance
-import de.syntax.aemp.data.model.DeviceUi
 
 class DeviceRepository {
 
@@ -12,9 +11,9 @@ class DeviceRepository {
         return RetrofitInstance.api.getDevices()
     }
 
-    fun getFavoriteDevices(allDevices: List<Device>): List<DeviceUi> {
+    fun getFavoriteDevices(allDevices: List<Device>): List<Device> {
         return allDevices.map {
-            DeviceUi(it, favorites.contains(it.id))
+            it
         }
     }
 

@@ -5,15 +5,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import de.syntax.aemp.data.model.Device
-import de.syntax.aemp.data.model.DeviceUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class FavoritesViewModel : ViewModel() {
 
-    private val _favorites = MutableStateFlow<List<DeviceUi>>(emptyList())
-    val devices: StateFlow<List<DeviceUi>> = _favorites.asStateFlow()
+    private val _favorites = MutableStateFlow<List<Device>>(emptyList())
+    val devices: StateFlow<List<Device>> = _favorites.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
@@ -35,7 +34,7 @@ class FavoritesViewModel : ViewModel() {
             .get()
             .addOnSuccessListener { snapshot ->
                 val favorites = snapshot.documents.mapNotNull { doc ->
-                    doc.toObject(Device::class.java)?.let { DeviceUi(it, isFavorited = true) }
+                    doc.toObject(Device::class.java)
                 }
                 _favorites.value = favorites
             }
@@ -47,10 +46,9 @@ class FavoritesViewModel : ViewModel() {
     fun addFavorite(device: Device) {
         val userId = getUserId() ?: return
         val docRef = db.collection("users").document(userId).collection("favorites").document(device.id.toString())
-        docRef.set(device) // Device als vollständiges Objekt speichern
-
-        if (_favorites.value.none { it.device.id == device.id }) {
-            _favorites.value += DeviceUi(device, isFavorited = true)
+        docRef.set(device)
+        if (_favorites.value.none { it.id == device.id }) {
+            _favorites.value += device
         }
     }
 
@@ -58,19 +56,18 @@ class FavoritesViewModel : ViewModel() {
         val userId = getUserId() ?: return
         val docRef = db.collection("users").document(userId).collection("favorites").document(device.id.toString())
         docRef.delete()
-
-        _favorites.value = _favorites.value.filterNot { it.device.id == device.id }
+        _favorites.value = _favorites.value.filterNot { it.id == device.id }
     }
 
-    fun toggleFavorite(deviceUi: DeviceUi) {
-        if (deviceUi.isFavorited) {
-            removeFavorite(deviceUi.device)
+    fun toggleFavorite(device: Device) {
+        if (isFavorite(device)) {
+            removeFavorite(device)
         } else {
-            addFavorite(deviceUi.device)
+            addFavorite(device)
         }
     }
 
     fun isFavorite(device: Device): Boolean {
-        return _favorites.value.any { it.device.id == device.id }
+        return _favorites.value.any { it.id == device.id }
     }
 }

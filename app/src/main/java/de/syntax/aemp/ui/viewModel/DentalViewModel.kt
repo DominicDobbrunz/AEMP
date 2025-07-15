@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.syntax.aemp.data.model.DeviceUi
+import de.syntax.aemp.data.model.Device
 import de.syntax.aemp.data.repository.DeviceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,14 +15,12 @@ import kotlinx.coroutines.launch
 class DentalViewModel : ViewModel() {
     private val repo = DeviceRepository()
 
-    private val _allDevices = MutableStateFlow<List<DeviceUi>>(emptyList())
-    private val _devices = MutableStateFlow<List<DeviceUi>>(emptyList())
-    val devices: StateFlow<List<DeviceUi>> = _devices
+    private val _allDevices = MutableStateFlow<List<Device>>(emptyList())
+    private val _devices = MutableStateFlow<List<Device>>(emptyList())
+    val devices: StateFlow<List<Device>> = _devices
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
-
-    private var favoritesViewModel: FavoritesViewModel? = null
 
     var searchText by mutableStateOf("")
         private set
@@ -38,30 +36,12 @@ class DentalViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val list = repo.fetchDevices()
-                val favoriteDevices = repo.getFavoriteDevices(list)
-                _allDevices.value = favoriteDevices
+                _allDevices.value = list
                 applyFilters()
             } catch (e: Exception) {
                 _error.value = "Fehler: ${e.message}"
             }
         }
-    }
-
-    fun setFavoritesViewModel(vm: FavoritesViewModel) {
-        favoritesViewModel = vm
-    }
-
-    fun toggleFavorite(deviceUi: DeviceUi) {
-        repo.toggleFavorite(deviceUi.device)
-        _devices.value = _devices.value.map {
-            it.copy(isFavorited = repo.isFavorite(it.device))
-        }
-        if (deviceUi.isFavorited) {
-            favoritesViewModel?.removeFavorite(deviceUi.device)
-        } else {
-            favoritesViewModel?.addFavorite(deviceUi.device)
-        }
-        favoritesViewModel?.loadFavorites()
     }
 
     fun onSearchTextChange(text: String) {
@@ -76,9 +56,9 @@ class DentalViewModel : ViewModel() {
 
     private fun applyFilters() {
         val filtered = _allDevices.value.filter { device ->
-            val matchesSearch = device.device.name.contains(searchText, ignoreCase = true)
+            val matchesSearch = device.name.contains(searchText, ignoreCase = true)
             val matchesCategory = selectedCategory == "Alle Geräte" ||
-                    device.device.category.equals(selectedCategory, ignoreCase = true)
+                    device.category.equals(selectedCategory, ignoreCase = true)
 
             matchesSearch && matchesCategory
         }

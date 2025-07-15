@@ -38,7 +38,8 @@ fun DeviceDetailScreen(
     navController: NavController
 ) {
     val devices = viewModel.devices.collectAsState().value
-    val deviceUi = devices.find { it.device.id == id } // ✅ Korrekt
+    // Ersetze deviceUi durch device (direkt vom Typ Device)
+    val device = devices.find { it.id == id }
 
     Column(
         modifier = Modifier
@@ -61,14 +62,11 @@ fun DeviceDetailScreen(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (deviceUi == null) {
-            Text(
-                "Gerät nicht gefunden",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge
-            )
+        if (device == null) {
+            // Fehlerbehandlung
+            return
         } else {
-            val device = deviceUi.device
+            // device kann direkt verwendet werden
             AsyncImage(
                 model = "http://10.0.2.2:8080/${device.image}",
                 contentDescription = "Gerätebild",
