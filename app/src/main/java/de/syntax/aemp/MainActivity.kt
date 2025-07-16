@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import de.syntax.aemp.ui.theme.AEMPTheme
 import de.syntax.aemp.ui.component.app.AppLauncher
 import de.syntax.aemp.ui.component.app.Launch
-import de.syntax.aemp.di.AppStart
+import de.syntax.aemp.start.AppStart
 import de.syntax.aemp.ui.viewModel.UserViewModel
 import kotlin.time.Duration.Companion.seconds
 

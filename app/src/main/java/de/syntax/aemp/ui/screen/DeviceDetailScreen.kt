@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +37,6 @@ fun DeviceDetailScreen(
     navController: NavController
 ) {
     val devices = viewModel.devices.collectAsState().value
-    // Ersetze deviceUi durch device (direkt vom Typ Device)
     val device = devices.find { it.id == id }
 
     Column(
@@ -66,17 +64,16 @@ fun DeviceDetailScreen(
             // Fehlerbehandlung
             return
         } else {
-            // device kann direkt verwendet werden
             AsyncImage(
                 model = "http://10.0.2.2:8080/${device.image}",
                 contentDescription = "Gerätebild",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 150.dp, max = 400.dp) // dynamische Höhe je nach Bild
+                    .heightIn(min = 150.dp, max = 400.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray),
                 alignment = Alignment.Center,
-                contentScale = ContentScale.Fit // 🔁 Bild wird nicht zugeschnitten
+                contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(

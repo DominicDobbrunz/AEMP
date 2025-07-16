@@ -1,4 +1,4 @@
-package de.syntax.aemp.di
+package de.syntax.aemp.start
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

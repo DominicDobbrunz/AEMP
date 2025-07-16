@@ -47,9 +47,7 @@ fun FavoritesScreen(
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(16.dp)
         )
-
         Spacer(Modifier.height(16.dp))
-
         error?.let {
             Text(
                 text = it,
@@ -57,9 +55,7 @@ fun FavoritesScreen(
                 modifier = Modifier.padding(16.dp)
             )
         }
-
         if (devices.isEmpty()) {
-            // Leerer Zustand mit Bild und Text
             Column(
                 modifier = Modifier
                     .fillMaxSize()

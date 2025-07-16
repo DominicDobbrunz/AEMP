@@ -30,7 +30,6 @@ fun ProfileCheckScreen(
             checked = true
         }
     }
-
     if (!checked) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()

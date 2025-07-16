@@ -29,7 +29,6 @@ import de.syntax.aemp.data.repository.FirebaseRepository
 import de.syntax.aemp.ui.component.profile.PasswordField
 import de.syntax.aemp.ui.component.profile.ProfileTextField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
@@ -42,7 +41,7 @@ fun RegisterScreen(
     var street by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var postalCode by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    val email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeat by remember { mutableStateOf("") }
 
@@ -102,8 +101,6 @@ fun RegisterScreen(
                         )
                         FirebaseRepository.saveUserProfile(profile)
                         result.user?.sendEmailVerification()
-
-                        // 🔽 Navigiere zum MainScreen
                         navController.navigate("device") {
                             popUpTo("register") { inclusive = true }
                         }

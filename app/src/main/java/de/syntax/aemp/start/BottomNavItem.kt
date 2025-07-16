@@ -1,4 +1,4 @@
-package de.syntax.aemp.di
+package de.syntax.aemp.start
 
 import de.syntax.aemp.R
 
