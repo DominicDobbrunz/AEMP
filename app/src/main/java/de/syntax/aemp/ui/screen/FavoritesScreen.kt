@@ -63,6 +63,12 @@ fun FavoritesScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                Text(
+                    text = "Welche Geräte nutzt du am meisten?.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Image(
                     painter = painterResource(id = R.drawable.favoritepicture1),
                     contentDescription = "Keine Favoriten",
@@ -70,7 +76,7 @@ fun FavoritesScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Noch keine Favoriten hinzugefügt.",
+                    text = "Oh noch keine Favoriten hinzugefügt!",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White
                 )

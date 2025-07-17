@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,12 @@ import de.syntax.aemp.ui.component.dental.DentalFilterBar
 import de.syntax.aemp.ui.component.profile.ProfileTextField
 import de.syntax.aemp.ui.viewModel.DentalViewModel
 import de.syntax.aemp.ui.viewModel.FavoritesViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.setValue
+import de.syntax.aemp.ui.viewModel.SettingViewModel
+import de.syntax.aemp.ui.viewModel.SettingViewModelFactory
 
 @Composable
 fun DentalScreen(navController: NavController) {
@@ -43,6 +53,49 @@ fun DentalScreen(navController: NavController) {
     val devices by viewModel.devices.collectAsState()
     val favorites by favoritesViewModel.devices.collectAsState()
     val error by viewModel.error.collectAsState()
+    val (showSearch, setShowSearch) = remember { mutableStateOf(false) }
+    val backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
+    val context = LocalContext.current.applicationContext
+    val settingViewModel: SettingViewModel = viewModel(factory = SettingViewModelFactory(context as android.app.Application))
+    val notificationsEnabled by settingViewModel.notificationsEnabled.collectAsState()
+    var showNotificationDialog by remember { mutableStateOf(false) }
+    var checkedFirstStart by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!checkedFirstStart) {
+            // Prüfe, ob der User schon entschieden hat (z.B. in DataStore)
+            // Hier: Wenn notificationsEnabled == null oder true (default), dann Dialog zeigen
+            if (!notificationsEnabled) return@LaunchedEffect
+            showNotificationDialog = true
+            checkedFirstStart = true
+        }
+    }
+
+    if (showNotificationDialog) {
+        AlertDialog(
+            onDismissRequest = { showNotificationDialog = false },
+            title = { Text("Benachrichtigungen aktivieren?") },
+            text = { Text("Es wurden neue Geräte hinzugefügt") },
+            confirmButton = {
+                TextButton(onClick = {
+                    settingViewModel.setNotificationsEnabled(true)
+                    showNotificationDialog = false
+                }) {
+                    Text("Aktivieren", color = MaterialTheme.colorScheme.onSecondary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    settingViewModel.setNotificationsEnabled(false)
+                    showNotificationDialog = false
+                }) {
+                    Text("Später",color = MaterialTheme.colorScheme.onSecondary)
+                }
+            },
+            containerColor = backgroundColor,
+            shape = RoundedCornerShape(8.dp)
+        )
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -53,9 +106,10 @@ fun DentalScreen(navController: NavController) {
             Text(
                 "Geräte",
                 color = Color.White,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 16.dp)
             )
-            IconButton(onClick = { /* showSearch = !showSearch */ }) {
+            IconButton(onClick = { setShowSearch(!showSearch) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.icons8_lupe_48),
                     contentDescription = "Suche",
@@ -64,7 +118,7 @@ fun DentalScreen(navController: NavController) {
             }
         }
         AnimatedVisibility(
-            visible = false, // showSearch, // Removed as per edit hint
+            visible = showSearch,
             enter = slideInVertically(initialOffsetY = { -50 }) + fadeIn(),
             exit = slideOutVertically(targetOffsetY = { -50 }) + fadeOut()
         ) {
@@ -89,6 +143,5 @@ fun DentalScreen(navController: NavController) {
             favorites = favorites,
             onFavoriteToggle = { device -> favoritesViewModel.toggleFavorite(device) }
         )
-        HorizontalDivider()
     }
 }

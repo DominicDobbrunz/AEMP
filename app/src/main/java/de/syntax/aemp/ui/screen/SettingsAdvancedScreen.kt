@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +40,8 @@ fun SettingsAdvancedScreen(
 
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val soundEnabled by viewModel.soundEnabled.collectAsState()
+    val vibrationEnabled by viewModel.vibrationEnabled.collectAsState()
 
     Column(
         modifier = Modifier
@@ -74,6 +77,20 @@ fun SettingsAdvancedScreen(
             title = "Benachrichtigungen",
             checked = notificationsEnabled,
             onCheckedChange = { viewModel.setNotificationsEnabled(it) }
+        )
+
+        // Töne Toggle
+        SettingToggleItem(
+            title = "Töne",
+            checked = soundEnabled,
+            onCheckedChange = { viewModel.setSoundEnabled(it) }
+        )
+
+        // Vibration Toggle
+        SettingToggleItem(
+            title = "Vibration",
+            checked = vibrationEnabled,
+            onCheckedChange = { viewModel.setVibrationEnabled(it) }
         )
 
         // Weitere Platzhalter

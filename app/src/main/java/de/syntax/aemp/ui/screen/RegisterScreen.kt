@@ -41,11 +41,9 @@ fun RegisterScreen(
     var street by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var postalCode by remember { mutableStateOf("") }
-    val email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeat by remember { mutableStateOf("") }
-
-
 
     Column(
         Modifier
@@ -64,6 +62,7 @@ fun RegisterScreen(
         ProfileTextField(value = street, label = "Straße") { street = it }
         ProfileTextField(value = postalCode, label = "PLZ") { postalCode = it }
         ProfileTextField(value = city, label = "Ort") { city = it }
+        ProfileTextField(value = email, label = "E-Mail") { email = it }
         PasswordField(
             password = password,
             onPasswordChange = { password = it },
