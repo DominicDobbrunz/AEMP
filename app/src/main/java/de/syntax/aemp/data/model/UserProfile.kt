@@ -9,5 +9,6 @@ data class UserProfile(
     val city: String = "",
     val postalCode: String = "",
     val email: String = "",
+    val birthDate: String = "",
     val profileImageUrl: String = ""
 )
