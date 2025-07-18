@@ -34,7 +34,7 @@ Die App soll für Mitarbeiter sein die mit diesen Geräten die Medizinprodukte a
 
 1. Projekt Klonen oder Kopieren
 ```sch
-git clone https://github.com/dein-username/aemp.git
+git clone https://github.com/dein-username/AEMP.git
 ```
 2. Android Studio öffnen und das Klonen.
 3. App im Studio über den Simulator starten.
