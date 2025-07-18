@@ -48,6 +48,7 @@ git clone https://github.com/dein-username/AEMP.git
 
 ## 👋 Weitere Aussichten:
 
+- sich mit Google anmelden können
 - die API weiter ausbauen
 - Funktionen in den Einstellung fertig implementieren
 - Profilbild hinzufügen über Kamera oder Galerie fertig stellen
