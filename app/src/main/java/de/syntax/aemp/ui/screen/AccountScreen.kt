@@ -40,7 +40,6 @@ import de.syntax.aemp.R
 import de.syntax.aemp.data.model.UserProfile
 import de.syntax.aemp.data.repository.FirebaseRepository
 
-
 @Composable
 fun AccountScreen(
     navController: NavHostController
@@ -56,7 +55,6 @@ fun AccountScreen(
             birthDateInput = it?.birthDate ?: ""
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +62,6 @@ fun AccountScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // 🔙 Back & Title
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
@@ -79,8 +76,6 @@ fun AccountScreen(
                 color = Color.White
             )
         }
-
-        // 👤 Benutzerinformationen
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
@@ -129,8 +124,6 @@ fun AccountScreen(
                 )
             }
         }
-
-        // ✉️ E-Mail Verifizierung
         if (user != null && !user.isEmailVerified) {
             Card(
                 modifier = Modifier.fillMaxWidth(),

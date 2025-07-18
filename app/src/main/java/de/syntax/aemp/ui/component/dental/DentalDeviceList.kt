@@ -31,11 +31,9 @@ fun DentalDeviceList(
 
     Column {
         Spacer(Modifier.height(8.dp))
-        // Geräteliste
         LazyColumn {
             items(devices) { device ->
                 val isFavorite = favorites.any { it.id == device.id }
-
                 DeviceCard(
                     device = device,
                     isFavorite = isFavorite,
@@ -47,21 +45,12 @@ fun DentalDeviceList(
                     navController.navigate("detail/${device.id}")
                 }
             }
-            // Optional: Loading spinner oder End-of-List anzeigen
             item {
                 CircularProgressIndicator(modifier = Modifier.padding(16.dp))
             }
         }
-        // Info Dialog
         if (showDialog) {
             FavoriteAddedDialog { showDialog = false }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DentalDeviceListPreview() {
-
 }

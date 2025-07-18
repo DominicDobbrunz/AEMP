@@ -63,14 +63,11 @@ fun DentalScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         if (!checkedFirstStart) {
-            // Prüfe, ob der User schon entschieden hat (z.B. in DataStore)
-            // Hier: Wenn notificationsEnabled == null oder true (default), dann Dialog zeigen
             if (!notificationsEnabled) return@LaunchedEffect
             showNotificationDialog = true
             checkedFirstStart = true
         }
     }
-
     if (showNotificationDialog) {
         AlertDialog(
             onDismissRequest = { showNotificationDialog = false },
