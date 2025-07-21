@@ -77,11 +77,28 @@ fun RegisterScreen(
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
+                if (firstName.isBlank() || lastName.isBlank() || praxisName.isBlank() || street.isBlank() || city.isBlank() || postalCode.isBlank() || email.isBlank() || password.isBlank() || passwordRepeat.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Bitte alle Felder ausfüllen",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
                 if (password != passwordRepeat) {
                     Toast.makeText(
                         context,
                         "Passwörter stimmen nicht überein",
                         Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+                val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}")
+                if (!passwordPattern.matches(password)) {
+                    Toast.makeText(
+                        context,
+                        "Passwort zu schwach: Mindestens 8 Zeichen, Groß- und Kleinbuchstaben sowie eine Zahl erforderlich",
+                        Toast.LENGTH_LONG
                     ).show()
                     return@Button
                 }
@@ -100,9 +117,16 @@ fun RegisterScreen(
                         )
                         FirebaseRepository.saveUserProfile(profile)
                         result.user?.sendEmailVerification()
-                        navController.navigate("device") {
+                        navController.navigate("dentals") {
                             popUpTo("register") { inclusive = true }
                         }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            context,
+                            "Registrierung fehlgeschlagen: ${e.localizedMessage}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
             },
             modifier = Modifier.fillMaxWidth()
